@@ -1,0 +1,13 @@
+storage.key
+mount_share.sh
+manual_vmss/keys
+*.pth
+bbox.json
+segm.json
+share.cred
+first_steps_example/launch_docker_*
+*.swp
+deployed_jobconfig.sh
+train.sh
+host_list
+deployconfig.sh
