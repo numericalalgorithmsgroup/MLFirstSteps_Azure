@@ -9,11 +9,15 @@ availability of cloud computing many ML users, both new and experienced are migr
 workflows to the cloud in order to reduce costs and access the latest and most powerful hardware.
 
 This tutorial demonstrates porting an existing machine learning model to a virtual machine on the
-Microsoft Azure cloud platform.  This is not the only way to perform ML training on Azure, for
-example Microsoft also offer the Azure ML product, which is designed to allow rapid deployment of
-commonly used ML applications.  However, the approach we will use here is the most flexible as it
-gives the user complete control over all aspects of the software environment, and is likely to be
-the fastest method of porting an existing ML workflow to Azure.
+Microsoft Azure cloud platform.  We will train a small movie recommendation model using a single
+GPU to give personalised recommendations. The total cost of performing this training should be no
+more than $5 using any of the single GPU instances currently available on Azure.
+
+This is not the only way to perform ML training on Azure, for example Microsoft also offer the
+Azure ML product, which is designed to allow rapid deployment of commonly used ML applications.
+However, the approach we will use here is the most flexible as it gives the user complete control
+over all aspects of the software environment, and is likely to be the fastest method of porting an
+existing ML workflow to Azure.
 
 
 ## Requirements
