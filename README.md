@@ -55,7 +55,6 @@ repository on GitHub with a small modification to update it to use the newest Mo
 
 [NVidia Deep Learning Examples]: https://github.com/NVIDIA/DeepLearningExamples/tree/master/PyTorch/Recommendation/NCF
 
-
 [Azure CLI]: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 [Azure Cloud Shell]: https://shell.azure.com/
 
@@ -359,7 +358,6 @@ in your working directory.
 
 **Note: The script will attempt to clean up all resources after use, but it is strongly recommended
 to check this manually to avoid a nasty - and expensive - surprise if something goes wrong.**
-
 
 ## Conclusion and Additional Resources
 
