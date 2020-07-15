@@ -14,7 +14,7 @@ GPU to give personalised recommendations. The total cost of performing this trai
 more than $5 using any of the single GPU instances currently available on Azure.
 
 This is not the only way to perform ML training on Azure, for example Microsoft also offer the
-Azure ML product, which is designed to allow rapid deployment of commonly used ML applications.
+[Azure ML product](https://azure.microsoft.com/en-gb/services/machine-learning/), which is designed to allow rapid deployment of commonly used ML applications.
 However, the approach we will use here is the most flexible as it gives the user complete control
 over all aspects of the software environment, and is likely to be the fastest method of porting an
 existing ML workflow to Azure.
@@ -24,7 +24,7 @@ existing ML workflow to Azure.
 
 To follow this tutorial you will need either:
 
-* A system with git, ssh, and the [Azure CLI] installed and logged in to a valid account
+* A system with git, ssh, and the [Azure CLI] installed and logged in to a valid account. If you are using Windows, the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) works well for this.
 
 or
 
