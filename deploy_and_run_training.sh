@@ -1,14 +1,22 @@
 #!/bin/bash -e
 
-# User config
+# This script requires the use of an ssh key to connect to the VM. Using ssh-agent to cache the key
+# is also strongly encouraged
+# Ensure you set the line below to point to your personal ssh key
+sshkey="$HOME/.ssh/my_ssh_public_key.pub"
+
+# For more information on creating ssh keys see:
+# https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent
+
+# User configs - edit if you like but will work as is
 rg_name="NCF-Tutorial"
 vm_name="NCF-Trainer"
 location="southcentralus"
 vm_size="Standard_NC6s_v2"
-sshkey="$HOME/.ssh/ptooley.pub"
 admin_user=$USER
 
-# Azure/docker specific config
+# You should not need to change any settings here
+# Azure/docker specific config 
 work_mount=/work
 dataset_mount=/data
 result_mount=/result
@@ -18,6 +26,14 @@ docker_imgdir=/mnt/resource/docker
 workdir="/mnt/resource"
 bundle_files="deployment"
 training_workdir=/mnt/resource/train
+
+if [[ ! -f "$sshkey" ]]; then
+  echo "Error: ${sshkey} not found"
+  echo
+  echo "You must edit the script to set your personal ssh key before running the script."
+  echo "See the comments at the top of the file for guidance."
+  exit
+fi
 
 echo -e "Creating VM Instance\n====================\n"
 
