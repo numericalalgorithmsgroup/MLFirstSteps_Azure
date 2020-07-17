@@ -26,10 +26,11 @@ az group create \
   --name ${rg_name} \
   --location ${location}
 
-(
+set +e
+
 az vm show \
   --resource-group ${rg_name} \
-  --name ${vm_name}
+  --name ${vm_name} &>/dev/null
 
 if [ "$?" -ne "0" ]; then
   echo -e "\nVM Instance:"
@@ -43,7 +44,6 @@ if [ "$?" -ne "0" ]; then
 else
   echo -e "\n Using existing VM"
 fi
-)
 
 echo -e "\nGPU Extensions:"
 az vm extension set \
@@ -178,6 +178,7 @@ scp ${vmip}:${training_workdir}/predictions.csv .
 echo -e "\n\nDeleting VM Instance\n====================\n"
 
 az group delete \
+  --yes \
   --name ${rg_name}
 
 echo -e "\n\nDone!"

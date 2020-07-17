@@ -1,0 +1,2 @@
+# Set lf line endings even on windows, so that shell scripts work
+* text=lf
