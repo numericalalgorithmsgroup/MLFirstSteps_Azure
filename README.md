@@ -277,7 +277,7 @@ until accuracy of `0.979` is attained.
 
 ```shell
 $ python -m torch.distributed.launch \
-  --nproc_per_node=<number_of_gpus> \
+  --nproc_per_node=1 \
   --use_env ncf.py \
   --data /data/cache/ml-25m \
   --checkpoint_dir /work \
