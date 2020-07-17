@@ -1,2 +1,3 @@
 # Set lf line endings even on windows, so that shell scripts work
-* text=lf
+*.sh text eol=lf
+* text eol=lf
