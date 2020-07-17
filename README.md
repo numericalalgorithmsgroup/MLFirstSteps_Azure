@@ -30,6 +30,9 @@ or
 
 * An active session of the [Azure Cloud Shell]
 
+[Azure CLI]: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
+[Azure Cloud Shell]: https://shell.azure.com/
+
 
 ## Choosing a suitable example
 
@@ -57,7 +60,6 @@ repository on GitHub with a small modification to update it to use the newest Mo
 
 [Azure CLI]: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 [Azure Cloud Shell]: https://shell.azure.com/
-
 
 ## Setting Up a Training Instance
 

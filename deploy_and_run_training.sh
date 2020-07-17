@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # User config
 rg_name="NCF-Tutorial"
@@ -26,6 +26,7 @@ az group create \
   --name ${rg_name} \
   --location ${location}
 
+(
 az vm show \
   --resource-group ${rg_name} \
   --name ${vm_name}
@@ -42,6 +43,7 @@ if [ "$?" -ne "0" ]; then
 else
   echo -e "\n Using existing VM"
 fi
+)
 
 echo -e "\nGPU Extensions:"
 az vm extension set \
