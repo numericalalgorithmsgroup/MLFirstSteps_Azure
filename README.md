@@ -61,6 +61,31 @@ repository on GitHub with a small modification to update it to use the newest Mo
 [Azure CLI]: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest
 [Azure Cloud Shell]: https://shell.azure.com/
 
+
+## Quickstart: Scripted VM Setup and Training
+
+The entirety of the training process can be scripted using the Azure CLI and standard Linux tools.
+An example script for doing this is provided as `deploy_and_run_training.sh`
+
+This script executes all the commands shown above, to create the VM instance, and run the training.
+The [custom-script] VM extension is used to manage the installation of the docker and building of
+the image.
+
+[custom-script]: https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-linux
+
+To run the example, first ensure that you are logged into the Azure CLI, then you will need to edit
+the `deploy_and_run_training.sh` script to provide your personal ssh key - this is needed to allow
+the script to log into the training VM. You can then run the script which will set up the VM
+instance, run the training, download results and delete VM instance. When the script completes you
+should have the final trained weights final predictions for one of the users, and a training log
+downloaded to files named `model.pth` `predictions.csv` and `training.log`, respectively, in your
+working directory.
+
+**Note: The script will attempt to clean up all resources after use, but it is strongly recommended
+to check this manually in the Azure portal to avoid a nasty - and expensive - surprise if something
+goes wrong.**
+
+
 ## Setting Up a Training Instance
 
 The NCF model with the MovieLens dataset is small enough to be trained in just a few minutes on a
@@ -192,54 +217,6 @@ Once we have logged back we can build the image using the Dockerfile provided in
 $ docker build --rm -t pytorch_docker . -f Dockerfile
 ```
 
-## Preparing the dataset for personalised recommendations
-
-To get personalised recommendations you should add your ratings for at least 20 movies
-into the dataset.  This can be done by manually appending data to the downloaded dataset before the
-preprocessing is performed.  The modified version of the NCF model distributed with the training
-includes this functionality via the `ncf/add_personal_ratings.py` script. If this script exists it
-will be automatically run when the dataset is downloaded and prepared prior to training.
-
-By default, the script contains some example data for someone who likes action films and animated
-films.  You can modify this to reflect your tastes by downloading a copy of the movielens
-dataset, finding the names of the films you want to give ratings for in the file `movies.csv`, and
-adding them to the script alongside a rating between 0 and 5.
-
-For example, suppose you wanted to add the movie "Iron Man" to your personal ratings, first check
-the exact title used in the dataset:
-
-```shell
-$ grep -i "Iron Man" movies.csv
-59315,Iron Man (2008),Action|Adventure|Sci-Fi
-77561,Iron Man 2 (2010),Action|Adventure|Sci-Fi|Thriller|IMAX
-102125,Iron Man 3 (2013),Action|Sci-Fi|Thriller|IMAX
-```
-
-So you would now add `Iron Man (2008)` to the start of `ncf/add_personal_ratings.py` along with a
-rating between 0 and 5:
-
-```shell
-scores = {
-    "Iron Man (2008)": 4.5
-    "Core, The (2003)": 0.0,
-    "Sharknado 5: Global Swarming": 1.0,
-    ...
-    }
-```
-
-**Important Notes:**
-
-* **You must include at least 20 ratings in order for your data to be included in the model.**
-
-* **The titles must exactly match the title as given in the dataset `movies.csv` otherwise 
-  the script will fail to lookup the correct id. Ignore any enclosing quotation marks (") in the
-  movie title, as these are cleaned by the script when the file is read.**
-
-* **This step modifies the dataset used! If you are trying to reproduce benchmarks performed
-  elsewhere, do not apply custom user ratings as it will change the training and convergence
-  behaviour compared to the reference dataset.**
-
-
 ## Running the Training
 
 To run the training, first it is necessary to launch the docker container, mounting the training
@@ -342,26 +319,64 @@ $ az vm delete --resource-group <rg_name> --name <vm_name>
 ```
 
 
-## Scripting the VM Setup and Training
+## Modifying the dataset for personalised recommendations
 
-The entirety of the above process can be scripted using the Azure CLI and standard Linux tools.  An
-example script for doing this is provided as `deploy_and_run_training.sh`
+We can use this model to get personalised recommendations by adding our own ratings to the dataset.
+In order to be included in the model we must include ratings for at least 20 movies, but naturally
+the more data beyond this that is included, the better the results should be.  before the
+preprocessing is performed.  The modified version of the NCF model distributed with the training
+includes a helper script which will add provided user ratings into the dataset. When the model is
+deployed the dataset download script will check for a file named `userscores.txt` in the ncf
+directory.
 
-This script executes all the commands shown above, to create the VM instance, and run the training.
-The [custom-script] VM extension is used to manage the installation of the docker and building of the
-image.
+An example user score file is provided as `userscores_example.txt`, and is populated with data for
+someone who likes action films and animated films.  You can modify this to reflect your tastes by
+downloading a copy of the [Movielens dataset], finding the names of the films you want to give
+ratings for in the file `movies.csv`, and adding them to the script along with a rating between 0
+and 5.
+[Movielens dataset]: https://grouplens.org/datasets/movielens/25m/
 
-[custom-script]: https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-linux
+For example, suppose you wanted to add the movie "Iron Man" to your personal ratings, first check
+the exact title used in the dataset:
 
-To run the example, simply ensure that you are logged into the Azure CLI and then run the script
-`deploy_and_run_training.sh`. When the script completes you should have the final trained weights
-and the final predictions downloaded to files named `model.pth` and `predictions.csv`, respectively,
-in your working directory.
+```shell
+$ grep -i "Iron Man" movies.csv
+59315,Iron Man (2008),Action|Adventure|Sci-Fi
+77561,Iron Man 2 (2010),Action|Adventure|Sci-Fi|Thriller|IMAX
+102125,Iron Man 3 (2013),Action|Sci-Fi|Thriller|IMAX
+```
 
-**Note: The script will attempt to clean up all resources after use, but it is strongly recommended
-to check this manually to avoid a nasty - and expensive - surprise if something goes wrong.**
+So you would now add `Iron Man (2008)` to the file `ncf/userscores.txt` along with a rating between
+0 and 5.  The syntax for the file is one rating per line, with the title and rating separated by a
+pipe character (`|`):
 
-## Conclusion and Additional Resources
+```shell
+Iron Man (2008)|4.5
+Core, The (2003)|1.0
+Sharknado 5: Global Swarming|1.5
+...
+```
+
+Now, when the training is run, your personal ratings will be included in the model allowing
+personalised predictions to be generated.  By default, the prediction generation script will create
+predictions for the most recently added userid, and so the downloaded `predictions.csv` will be
+personalised for the ratings information you gave.
+
+**Important Notes:**
+
+* **You must include at least 20 ratings in order for your data to be included in the model.**
+
+* **The titles must exactly match the title as given in the dataset `movies.csv` otherwise 
+  the script will fail to lookup the correct id.**
+
+* **This modifies the dataset used! If you are trying to reproduce benchmarks performed
+  elsewhere, do not apply custom user ratings as it will change the training and convergence
+  behaviour compared to the reference dataset.**
+
+
+
+
+## Conclusions and Additional Resources
 
 Having followed this tutorial you should have an idea of the steps involved in deploying an
 existing machine learning workflow on the Azure platform using Docker containers. The key steps in
@@ -382,3 +397,11 @@ check out our second ML tutorial "[Distributed Mask R-CNN Training on MS Azure]"
 
 For impartial, vendor agnostic advice on high performance computing and to find out how NAG can
 help you migrate to the cloud contact us at [info@nag.co.uk](info@nag.co.uk).
+
+## What Haven't We Told You (Yet)?
+
+* Spot Pricing
+
+* Other instance types
+
+* 

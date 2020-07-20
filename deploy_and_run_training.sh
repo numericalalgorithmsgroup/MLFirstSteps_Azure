@@ -26,6 +26,8 @@ docker_imgdir=/mnt/resource/docker
 workdir="/mnt/resource"
 bundle_files="deployment"
 training_workdir=/mnt/resource/train
+sshcmd='ssh -o StrictHostKeyChecking=No -o UserKnownHostsFile=/dev/null'
+scpcmd='scp -o StrictHostKeyChecking=No -o UserKnownHostsFile=/dev/null'
 
 if [[ ! -f "$sshkey" ]]; then
   echo "Error: ${sshkey} not found"
@@ -175,20 +177,21 @@ echo -e "\nCopying training files:"
 if [ -e "ncf/add_personal_ratings.py" ]; then
   echo -e "\nNOTE: Adding personal ratings to training dataset. Delete ncf/add_personal_ratings.py if this is undesirable"
 fi
-ssh ${vmip} mkdir -p ${training_workdir}
-scp -qr ncf train.sh launch_docker_{interactive,batch}.sh ${vmip}:${training_workdir}
+$sshcmd ${vmip} mkdir -p ${training_workdir}
+$scpcmd -qr ncf train.sh launch_docker_{interactive,batch}.sh ${vmip}:${training_workdir}
 
 echo -e "\n\nRunning Training\n================\n"
 
 echo -e "\nLaunch container:"
-containerid=$(ssh ${vmip} bash -c "'cd ${training_workdir}; bash ./launch_docker_batch.sh ${training_workdir} ./train.sh'")
-(ssh ${vmip} docker logs -f $containerid &)
-ssh ${vmip} docker wait $containerid
+containerid=$($sshcmd ${vmip} bash -c "'cd ${training_workdir}; bash ./launch_docker_batch.sh ${training_workdir} ./train.sh'")
+($sshcmd ${vmip} docker logs -f $containerid &)
+$sshcmd ${vmip} docker wait $containerid
 
-echo -e "\nDownloading model data:"
+echo -e "\nDownloading model data and logs:"
 
-scp ${vmip}:${training_workdir}/model.pth .
-scp ${vmip}:${training_workdir}/predictions.csv .
+$scpcmd ${vmip}:${training_workdir}/model.pth .
+$scpcmd ${vmip}:${training_workdir}/predictions.csv .
+$scpcmd ${vmip}:${training_workdir}/training.log .
 
 
 echo -e "\n\nDeleting VM Instance\n====================\n"
