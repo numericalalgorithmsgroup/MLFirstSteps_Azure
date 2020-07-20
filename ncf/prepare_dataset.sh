@@ -76,7 +76,7 @@ fi
 if [ ! -f ${CACHED_DATADIR}/train_ratings.pt ]; then
     echo "preprocessing ${RATINGS_PATH} and save to disk"
     t0=$(date +%s)
-    if [ -f "add_personal_ratings.py" ]; then
+    if [ -f "userscores.txt" ]; then
       echo Appending personal ratings to dataset
       python add_personal_ratings.py $(dirname ${RATINGS_PATH})/movies.csv ${RATINGS_PATH}
     fi

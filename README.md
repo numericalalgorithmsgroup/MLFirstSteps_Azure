@@ -357,10 +357,24 @@ Sharknado 5: Global Swarming|1.5
 ...
 ```
 
-Now, when the training is run, your personal ratings will be included in the model allowing
-personalised predictions to be generated.  By default, the prediction generation script will create
-predictions for the most recently added userid, and so the downloaded `predictions.csv` will be
-personalised for the ratings information you gave.
+A validation script `check_userscores.py` is provided to allow you to check that your personal
+ratings file is valid before submitting the job.  To check your ratings file, invoke the script and
+pass the location of both the movies.csv file and your ratings file, e.g:
+
+```shell
+$ python check_userscores.py -m ~/downloads/ml25-m/movies.csv -u ncf/userscores.txt
+Checking ncf/userscores.txt against /home/phil/downloads/ml-25m/movies.csv:
+
+File ncf/userscores.txt: All entries valid.
+```
+
+If there are errors in your file the script will alert you to the location and nature of the issue.
+
+Once you have placed your validated `userscores.txt` file in the `ncf` directory the training
+script can be rerun. When the training is run, your personal ratings will be included in the model
+allowing personalised predictions to be generated.  By default, the prediction generation script
+will create predictions for the most recently added userid, and so the downloaded `predictions.csv`
+will be personalised for the ratings information you gave.
 
 **Important Notes:**
 
@@ -395,13 +409,43 @@ check out our second ML tutorial "[Distributed Mask R-CNN Training on MS Azure]"
 
 [Distributed Mask R-CNN Training on MS Azure]: https://github.com/numericalalgorithmsgroup/MaskR-CNN_Azure
 
-For impartial, vendor agnostic advice on high performance computing and to find out how NAG can
-help you migrate to the cloud contact us at [info@nag.co.uk](info@nag.co.uk).
-
 ## What Haven't We Told You (Yet)?
 
-* Spot Pricing
+Running in the cloud gives you a lot of flexibility in terms of the machine types and pricing
+options available. Here are a couple of extra things to consider if you are planning to deploy ML
+to the cloud in earnest:
 
-* Other instance types
+### Spot Pricing
 
-* 
+By default Azure VMs are charged at "Pay as you go" pricing rates.  This gives you guaranteed
+access to the VM until you choose to stop it, but it is the most expensive way to pay for compute
+on Azure.
+
+If you have a workload that can be interrupted, or are happy to take the risk that your job might
+not complete, you can use the [spot pricing tier] instead.  This allows you to purchase unused
+compute capacity at a large discount (typically 80-90%) with the risk that your workload could be
+evicted at any time.
+
+[spot pricing tier]: https://azure.microsoft.com/en-gb/pricing/spot/
+
+To make use of the spot pricing tier you can pass the `--priority Spot` option to the Azure cli
+when creating your VM.
+
+### Different instance types
+
+The Azure platform offers a variety of different GPU instances with different types and numbers of
+GPU available.  In this tutorial we have used the "Standard\_NC6s\_v2" VM type with a single NVidia
+P100, however we could also run this training on a K80 or V100 equipped VM or a VM with multiple
+GPUs.  To do this we would simply change the requested VM size when calling `az vm create`.  For
+example, for slightly lower cost than the Standard\_NC6s\_v2, we could use a Standard\_NC12
+instance which is equipped with 2 K80 GPUs.  Then to take advantage of both GPUs when training pass
+a value of 2 to `--nproc-per-node` when launching the training.
+
+## NAG Cloud Computing Solutions
+
+NAG offer [cloud computing consultancy] services to help organisations optimise their numerical
+applications for the cloud. For impartial, vendor agnostic advice on high performance computing and
+to find out how NAG can help you migrate to the cloud contact us at
+[info@nag.co.uk](info@nag.co.uk).
+
+[cloud computing consultancy]: https://www.nag.co.uk/content/cloud-computing-solutions
