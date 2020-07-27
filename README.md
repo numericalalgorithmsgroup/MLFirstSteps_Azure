@@ -67,7 +67,7 @@ repository on GitHub with a small modification to update it to use the newest Mo
 The entirety of the training process can be scripted using the Azure CLI and standard Linux tools.
 An example script for doing this is provided as `deploy_and_run_training.sh`
 
-This script executes all the commands shown above, to create the VM instance, and run the training.
+This script executes all the commands shown below to create the VM instance and run the training.
 The [custom-script] VM extension is used to manage the installation of the docker and building of
 the image.
 
