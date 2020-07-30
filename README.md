@@ -261,13 +261,6 @@ $ python -m torch.distributed.launch \
   --threshold 0.979
 ```
 
-The results can now be copied back via ssh secure copy. To do this, use scp from your _local
-machine_:
-
-```shell
-$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/model.pth .
-```
-
 ## Inferencing: Recommending Movies
 
 Having trained the model we can now use it to recommend additional movies.  For each user/movie
@@ -291,13 +284,19 @@ highest user ID number.  Assuming you provided personalised rating information p
 the model, the highest user ID will have your ratings and so the returned predictions will be your
 personalised movie recommendations.
 
-```shell
-$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/first_steps_example/predictions.csv . 
-```
-
 The deployment script (see below) will automatically run the inferencing after training and
 download the prediction file along with the model after the run completes.
 
+
+## Dowloading the results to your local machine
+
+The results can now be copied back via ssh secure copy. To do this, use scp from your _local
+machine_:
+
+```shell
+$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/model.pth .
+$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/first_steps_example/predictions.csv . 
+```
 
 ## Deleting the Instance After Use
 
