@@ -140,7 +140,7 @@ $ az vm list-ip-addresses --name <vm_name>
 
 ## Getting a copy of the tutorial repository
 
-Next we need to acquire a local copy of the tutorial repository. We will do this on the local ssd
+One we are logged into the VM instance, we need to acquire a local copy of the tutorial repository. We will do this on the local ssd
 of the instance, which is mounted at `/mnt/resource`:
 
 ```shell
@@ -158,8 +158,7 @@ directory will be mounted in the docker container in the next step.
 
 ## Installing the Docker and Building the Image
 
-Once we have logged into the instance, we need to install the docker with the NVidia runtime. If
-you are using the CentOS image in the example above, then use `yum` as shown:
+Once we have logged into the instance, we need to install the docker with the NVidia runtime. Since we are using the CentOS image on our VM, we can use use `yum` as shown:
 
 ```shell
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
