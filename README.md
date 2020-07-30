@@ -261,27 +261,6 @@ $ python -m torch.distributed.launch \
   --threshold 0.979
 ```
 
-## Inferencing: Recommending Movies
-
-Having trained the model we can now use it to recommend additional movies.  For each user/movie
-pairing the model gives a predicted user rating between 0-1. The highest predicted movies not rated
-by the user can then be used as recommendations for that user.
-
-The provided `ncf/userinference.py` script gives an example of how to generate predictions from the
-trained model. It can be run either on the remote machine or on a local machine with PyTorch
-installed and does not require a GPU to run. It takes two command-line arguments, the first the
-path to the trained model file, and the second the path to the original `movies.csv` file from the
-dataset - this is used to map movie IDs back to their names.
-
-```shell
-$ python userinference.py /work/model.pth /data/ml-25m/movies.csv --output-dir /work
-```
-
-The script will output the predictions sorted by descending rating in the file `predictions.csv`.
-
-By default, the script will generate a predicted rating for all movies in the dataset for the
-highest user ID number. 
-
 ## Modifying the dataset for personalised recommendations
 
 We can use this model to get personalised recommendations by adding our own ratings to the dataset.
@@ -339,6 +318,31 @@ allowing personalised predictions to be generated.  By default, the prediction g
 will create predictions for the most recently added userid, and so the downloaded `predictions.csv`
 will be personalised for the ratings information you gave.
 
+## Inferencing: Recommending Movies
+
+Having trained the model we can now use it to recommend additional movies.  For each user/movie
+pairing the model gives a predicted user rating between 0-1. The highest predicted movies not rated
+by the user can then be used as recommendations for that user.
+
+The provided `ncf/userinference.py` script gives an example of how to generate predictions from the
+trained model. It can be run either on the remote machine or on a local machine with PyTorch
+installed and does not require a GPU to run. It takes two command-line arguments, the first the
+path to the trained model file, and the second the path to the original `movies.csv` file from the
+dataset - this is used to map movie IDs back to their names.
+
+```shell
+$ python userinference.py /work/model.pth /data/ml-25m/movies.csv --output-dir /work
+```
+
+The script will output the predictions sorted by descending rating in the file `predictions.csv`.
+
+By default, the script will generate a predicted rating for all movies in the dataset for the
+highest user ID number. Assuming you provided personalised rating information prior to training
+the model, the highest user ID will have your ratings and so the returned predictions will be your
+personalised movie recommendations.
+
+
+
 **Important Notes:**
 
 * **You must include at least 20 ratings in order for your data to be included in the model.**
@@ -349,8 +353,6 @@ will be personalised for the ratings information you gave.
 * **This modifies the dataset used! If you are trying to reproduce benchmarks performed
   elsewhere, do not apply custom user ratings as it will change the training and convergence
   behaviour compared to the reference dataset.**
-
-
 
 ## Dowloading the results to your local machine
 
