@@ -280,10 +280,7 @@ $ python userinference.py /work/model.pth /data/ml-25m/movies.csv --output-dir /
 The script will output the predictions sorted by descending rating in the file `predictions.csv`.
 
 By default, the script will generate a predicted rating for all movies in the dataset for the
-highest user ID number.  Assuming you provided personalised rating information prior to training
-the model, the highest user ID will have your ratings and so the returned predictions will be your
-personalised movie recommendations.
-
+highest user ID number. 
 
 ## Modifying the dataset for personalised recommendations
 
