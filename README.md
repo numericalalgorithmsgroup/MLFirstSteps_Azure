@@ -284,35 +284,6 @@ highest user ID number.  Assuming you provided personalised rating information p
 the model, the highest user ID will have your ratings and so the returned predictions will be your
 personalised movie recommendations.
 
-## Dowloading the results to your local machine
-
-The results can now be copied back via ssh secure copy. To do this, use scp from your _local
-machine_:
-
-```shell
-$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/model.pth .
-$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/first_steps_example/predictions.csv . 
-```
-
-## Deleting the Instance After Use
-
-To avoid being billed for more resources than needed it is important to delete the VM instance and
-associated resources after use.
-
-Ideally, if you created a resource group specifically for the tutorial resources, the whole group
-can be deleted at once:
-
-```shell
-$ az group delete --name <rg_name>
-```
-
-Alternatively, if you wish to retain the other resources and delete just the VM instance, use the
-`az vm delete` command:
-
-```shell
-$ az vm delete --resource-group <rg_name> --name <vm_name>
-```
-
 
 ## Modifying the dataset for personalised recommendations
 
@@ -384,6 +355,34 @@ will be personalised for the ratings information you gave.
 
 
 
+## Dowloading the results to your local machine
+
+The results can now be copied back via ssh secure copy. To do this, use scp from your _local
+machine_:
+
+```shell
+$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/model.pth .
+$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/first_steps_example/predictions.csv . 
+```
+
+## Deleting the Instance After Use
+
+To avoid being billed for more resources than needed it is important to delete the VM instance and
+associated resources after use.
+
+Ideally, if you created a resource group specifically for the tutorial resources, the whole group
+can be deleted at once:
+
+```shell
+$ az group delete --name <rg_name>
+```
+
+Alternatively, if you wish to retain the other resources and delete just the VM instance, use the
+`az vm delete` command:
+
+```shell
+$ az vm delete --resource-group <rg_name> --name <vm_name>
+```
 
 ## Conclusions and Additional Resources
 
