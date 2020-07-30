@@ -213,6 +213,7 @@ effect.
 Once we have logged back we can build the image using the Dockerfile provided in the repository:
 
 ```shell
+$ cd /mnt/resource/work/MLFirstSteps_Azure
 $ docker build --rm -t pytorch_docker . -f Dockerfile
 ```
 
