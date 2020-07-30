@@ -265,7 +265,7 @@ The results can now be copied back via ssh secure copy. To do this, use scp from
 machine_:
 
 ```shell
-$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/first_steps_example/model.pth .
+$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/model.pth .
 ```
 
 ## Inferencing: Recommending Movies
