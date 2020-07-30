@@ -225,7 +225,7 @@ scripts directory as `/work` within the container.
 ```shell
 $ cd /mnt/resource/work/MLFirstSteps_Azure
 $ docker run --runtime=nvidia \
-    -v /mnt/resource/work/MLFirstSteps_Azure/first_steps_example:/work \
+    -v /mnt/resource/work/MLFirstSteps_Azure/:/work \
     --rm \
     --name="container_name" \
     --shm-size=10g \
