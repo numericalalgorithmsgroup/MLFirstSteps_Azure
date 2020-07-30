@@ -284,10 +284,6 @@ highest user ID number.  Assuming you provided personalised rating information p
 the model, the highest user ID will have your ratings and so the returned predictions will be your
 personalised movie recommendations.
 
-The deployment script (see below) will automatically run the inferencing after training and
-download the prediction file along with the model after the run completes.
-
-
 ## Dowloading the results to your local machine
 
 The results can now be copied back via ssh secure copy. To do this, use scp from your _local
