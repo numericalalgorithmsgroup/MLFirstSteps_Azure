@@ -310,6 +310,8 @@ Alternatively, if you wish to retain the other resources and delete just the VM 
 $ az vm delete --resource-group <rg_name> --name <vm_name>
 ```
 
+**Either way, make sure that you've deleted everything you expected to by looking in the Azure Portal**
+
 ## Modifying the dataset for personalised recommendations
 
 We can use this model to get personalised recommendations by adding our own ratings to the dataset.
