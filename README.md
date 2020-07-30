@@ -260,6 +260,55 @@ $ python -m torch.distributed.launch \
   --checkpoint_dir /work \
   --threshold 0.979
 ```
+## Inferencing: Recommending Movies
+
+Having trained the model we can now use it to recommend additional movies.  For each user/movie
+pairing the model gives a predicted user rating between 0-1. The highest predicted movies not rated
+by the user can then be used as recommendations for that user.
+
+The provided `ncf/userinference.py` script gives an example of how to generate predictions from the
+trained model. It can be run either on the remote machine or on a local machine with PyTorch
+installed and does not require a GPU to run. It takes two command-line arguments, the first the
+path to the trained model file, and the second the path to the original `movies.csv` file from the
+dataset - this is used to map movie IDs back to their names.
+
+```shell
+$ python userinference.py /work/model.pth /data/ml-25m/movies.csv --output-dir /work
+```
+
+The script will output the predictions sorted by descending rating in the file `predictions.csv`.
+
+By default, the script will generate a predicted rating for all movies in the dataset for the
+highest user ID number.
+
+## Dowloading the results to your local machine
+
+The results can now be copied back via ssh secure copy. To do this, use scp from your _local
+machine_:
+
+```shell
+$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/model.pth .
+$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/first_steps_example/predictions.csv . 
+```
+
+## Deleting the Instance After Use
+
+To avoid being billed for more resources than needed it is important to delete the VM instance and
+associated resources after use.
+
+Ideally, if you created a resource group specifically for the tutorial resources, the whole group
+can be deleted at once:
+
+```shell
+$ az group delete --name <rg_name>
+```
+
+Alternatively, if you wish to retain the other resources and delete just the VM instance, use the
+`az vm delete` command:
+
+```shell
+$ az vm delete --resource-group <rg_name> --name <vm_name>
+```
 
 ## Modifying the dataset for personalised recommendations
 
@@ -318,31 +367,6 @@ allowing personalised predictions to be generated.  By default, the prediction g
 will create predictions for the most recently added userid, and so the downloaded `predictions.csv`
 will be personalised for the ratings information you gave.
 
-## Inferencing: Recommending Movies
-
-Having trained the model we can now use it to recommend additional movies.  For each user/movie
-pairing the model gives a predicted user rating between 0-1. The highest predicted movies not rated
-by the user can then be used as recommendations for that user.
-
-The provided `ncf/userinference.py` script gives an example of how to generate predictions from the
-trained model. It can be run either on the remote machine or on a local machine with PyTorch
-installed and does not require a GPU to run. It takes two command-line arguments, the first the
-path to the trained model file, and the second the path to the original `movies.csv` file from the
-dataset - this is used to map movie IDs back to their names.
-
-```shell
-$ python userinference.py /work/model.pth /data/ml-25m/movies.csv --output-dir /work
-```
-
-The script will output the predictions sorted by descending rating in the file `predictions.csv`.
-
-By default, the script will generate a predicted rating for all movies in the dataset for the
-highest user ID number. Assuming you provided personalised rating information prior to training
-the model, the highest user ID will have your ratings and so the returned predictions will be your
-personalised movie recommendations.
-
-
-
 **Important Notes:**
 
 * **You must include at least 20 ratings in order for your data to be included in the model.**
@@ -354,34 +378,6 @@ personalised movie recommendations.
   elsewhere, do not apply custom user ratings as it will change the training and convergence
   behaviour compared to the reference dataset.**
 
-## Dowloading the results to your local machine
-
-The results can now be copied back via ssh secure copy. To do this, use scp from your _local
-machine_:
-
-```shell
-$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/model.pth .
-$ scp <vm_ip>:/mnt/resource/work/MLFirstSteps_Azure/first_steps_example/predictions.csv . 
-```
-
-## Deleting the Instance After Use
-
-To avoid being billed for more resources than needed it is important to delete the VM instance and
-associated resources after use.
-
-Ideally, if you created a resource group specifically for the tutorial resources, the whole group
-can be deleted at once:
-
-```shell
-$ az group delete --name <rg_name>
-```
-
-Alternatively, if you wish to retain the other resources and delete just the VM instance, use the
-`az vm delete` command:
-
-```shell
-$ az vm delete --resource-group <rg_name> --name <vm_name>
-```
 
 ## Conclusions and Additional Resources
 
