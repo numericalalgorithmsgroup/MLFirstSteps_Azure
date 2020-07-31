@@ -98,7 +98,10 @@ you like so long as it has an NVidia GPU - only the training time of the model s
 the "Scripting the VM Setup and Training" section below**
 
 First we will create a new resource group to hold the VM and its related materials.  This allows
-easy management and deletion of the resources we have used when they are no longer needed:
+easy management and deletion of the resources we have used when they are no longer needed.
+
+Throughout this tutorial values inside angle brackets (`<>`) represent user-specific choices of
+names and options and should be replaced with an appropriate value when executing the command:
 
 ```shell
 $ az group create --name <rg_name> --location <location>
