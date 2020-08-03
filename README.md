@@ -14,9 +14,10 @@ GPU to give personalised recommendations. The total cost of performing this trai
 more than $5 using any of the single GPU instances currently available on Azure.
 
 This is not the only way to perform ML training on Azure, for example Microsoft also offer the
-[Azure ML product](https://azure.microsoft.com/en-gb/services/machine-learning/), which is designed to allow rapid deployment of commonly used ML applications.
-However, the approach we will use here is the most flexible as it gives the user complete control
-over all aspects of the software environment, and is likely to be the fastest method of porting an
+[Azure ML product](https://azure.microsoft.com/en-gb/services/machine-learning/), which is designed
+to allow rapid deployment of commonly used ML applications.  However, the approach we will use here
+is the most flexible as it gives the user complete control over all aspects of the software
+environment, and is likely to be the fastest method of porting an
 existing ML workflow to Azure.
 
 
@@ -24,7 +25,9 @@ existing ML workflow to Azure.
 
 To follow this tutorial you will need either:
 
-* A system with git, ssh, and the [Azure CLI] installed and logged in to a valid account. If you are using Windows, the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) works well for this.
+* A system with git, ssh, and the [Azure CLI] installed and logged in to a valid account. If you
+  are using Windows, the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
+  works well for this.
 
 or
 
@@ -143,8 +146,8 @@ $ az vm list-ip-addresses --name <vm_name>
 
 ## Getting a copy of the tutorial repository
 
-One we are logged into the VM instance, we need to acquire a local copy of the tutorial repository. We will do this on the local ssd
-of the instance, which is mounted at `/mnt/resource`:
+One we are logged into the VM instance, we need to acquire a local copy of the tutorial repository.
+We will do this on the local ssd of the instance, which is mounted at `/mnt/resource`:
 
 ```shell
 $ sudo mkdir /mnt/resource/work
@@ -161,7 +164,8 @@ directory will be mounted in the docker container in the next step.
 
 ## Installing the Docker and Building the Image
 
-Once we have logged into the instance, we need to install the docker with the NVidia runtime. Since we are using the CentOS image on our VM, we can use use `yum` as shown:
+Once we have logged into the instance, we need to install the docker with the NVidia runtime. Since
+we are using the CentOS image on our VM, we can use use `yum` as shown:
 
 ```shell
 $ distribution=$(. /etc/os-release;echo $ID$VERSION_ID)
@@ -313,76 +317,8 @@ Alternatively, if you wish to retain the other resources and delete just the VM 
 $ az vm delete --resource-group <rg_name> --name <vm_name>
 ```
 
-**Either way, make sure that you've deleted everything you expected to by looking in the Azure Portal**
-
-## Modifying the dataset for personalised recommendations
-
-We can use this model to get personalised recommendations by adding our own ratings to the dataset.
-In order to be included in the model we must include ratings for at least 20 movies, but naturally
-the more data beyond this that is included, the better the results should be.  before the
-preprocessing is performed.  The modified version of the NCF model distributed with the training
-includes a helper script which will add provided user ratings into the dataset. When the model is
-deployed the dataset download script will check for a file named `userscores.txt` in the ncf
-directory.
-
-An example user score file is provided as `userscores_example.txt`, and is populated with data for
-someone who likes action films and animated films.  You can modify this to reflect your tastes by
-downloading a copy of the [Movielens dataset], finding the names of the films you want to give
-ratings for in the file `movies.csv`, and adding them to the script along with a rating between 0
-and 5.
-[Movielens dataset]: https://grouplens.org/datasets/movielens/25m/
-
-For example, suppose you wanted to add the movie "Iron Man" to your personal ratings, first check
-the exact title used in the dataset:
-
-```shell
-$ grep -i "Iron Man" movies.csv
-59315,Iron Man (2008),Action|Adventure|Sci-Fi
-77561,Iron Man 2 (2010),Action|Adventure|Sci-Fi|Thriller|IMAX
-102125,Iron Man 3 (2013),Action|Sci-Fi|Thriller|IMAX
-```
-
-So you would now add `Iron Man (2008)` to the file `ncf/userscores.txt` along with a rating between
-0 and 5.  The syntax for the file is one rating per line, with the title and rating separated by a
-pipe character (`|`):
-
-```shell
-Iron Man (2008)|4.5
-Core, The (2003)|1.0
-Sharknado 5: Global Swarming|1.5
-...
-```
-
-A validation script `check_userscores.py` is provided to allow you to check that your personal
-ratings file is valid before submitting the job.  To check your ratings file, invoke the script and
-pass the location of both the movies.csv file and your ratings file, e.g:
-
-```shell
-$ python check_userscores.py -m ~/downloads/ml25-m/movies.csv -u ncf/userscores.txt
-Checking ncf/userscores.txt against /home/phil/downloads/ml-25m/movies.csv:
-
-File ncf/userscores.txt: All entries valid.
-```
-
-If there are errors in your file the script will alert you to the location and nature of the issue.
-
-Once you have placed your validated `userscores.txt` file in the `ncf` directory the training
-script can be rerun. When the training is run, your personal ratings will be included in the model
-allowing personalised predictions to be generated.  By default, the prediction generation script
-will create predictions for the most recently added userid, and so the downloaded `predictions.csv`
-will be personalised for the ratings information you gave.
-
-**Important Notes:**
-
-* **You must include at least 20 ratings in order for your data to be included in the model.**
-
-* **The titles must exactly match the title as given in the dataset `movies.csv` otherwise 
-  the script will fail to lookup the correct id.**
-
-* **This modifies the dataset used! If you are trying to reproduce benchmarks performed
-  elsewhere, do not apply custom user ratings as it will change the training and convergence
-  behaviour compared to the reference dataset.**
-
+**Either way, make sure that you've deleted everything you expected to by looking in the Azure
+Portal**
 
 ## Conclusions and Additional Resources
 
@@ -429,11 +365,11 @@ when creating your VM.
 
 The Azure platform offers a variety of different GPU instances with different types and numbers of
 GPU available.  In this tutorial we have used the "Standard\_NC6s\_v2" VM type with a single NVidia
-P100, however we could also run this training on a K80 or V100 equipped VM or a VM with multiple
-GPUs.  To do this we would simply change the requested VM size when calling `az vm create`.  For
-example, for slightly lower cost than the Standard\_NC6s\_v2, we could use a Standard\_NC12
-instance which is equipped with 2 K80 GPUs.  Then to take advantage of both GPUs when training pass
-a value of 2 to `--nproc-per-node` when launching the training.
+P100, however we could also run this training on a V100 equipped VM or a VM with multiple GPUs.  To
+do this we would simply change the requested VM size when calling `az vm create`.  For example, for
+faster result at higher cost than the Standard\_NC6s\_v2, we could use a Standard\_NC12s\_v2
+instance which is equipped with 2 P100 GPUs.  Then to take advantage of both GPUs when training
+pass a value of 2 to `--nproc-per-node` when launching the training.
 
 ## NAG Cloud Computing Solutions
 
