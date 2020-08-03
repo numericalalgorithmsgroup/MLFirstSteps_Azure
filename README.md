@@ -65,6 +65,19 @@ repository on GitHub with a small modification to update it to use the newest Mo
 [Azure Cloud Shell]: https://shell.azure.com/
 
 
+## GPU VM Quota on Azure
+
+GPU-enabled VMs are publically available on Azure, however you may still need to request quota
+before you can create them.  If you do not have quota for the NCv2 family of VMs then the tutorial
+examples will fail to run with a message that you have exceeded quota.  
+
+By default this tutorial assumes you will run in the **SouthCentralUS** Azure region so you should
+request a quota of at least 6 vCPUs for the NCv2 family in this region.  To do this, go to the
+[Azure Portal](https://portal.azure.com), go to the subscriptions area, open your subscription and
+select "Usage + Quotas" from the sidebar.  From this pane you can request additional quota using
+the "Request Increase" button.  For a detailed guide see the
+[Microsoft Documentation page](https://docs.microsoft.com/en-us/azure/azure-portal/supportability/regional-quota-requests).
+
 ## Quickstart: Scripted VM Setup and Training
 
 The entirety of the training process can be scripted using the Azure CLI and standard Linux tools.
