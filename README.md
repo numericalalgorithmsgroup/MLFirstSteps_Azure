@@ -107,8 +107,8 @@ goes wrong.**
 The NCF model with the MovieLens dataset is small enough to be trained in just a few minutes on a
 single GPU (P100 or V100), so to begin with we will set up a single VM instance and deploy a docker
 container with PyTorch that we can use to train the model.  The instance type we used was
-"Standard_NC6s_v2", which contains a single NVidia P100, however you can use any instance type
-you like so long as it has an NVidia GPU - only the training time of the model should change.
+"Standard_NC6s_v2", which contains a single NVidia P100, however you can use any instance type you
+like so long as it has an NVidia P100 or V100 - only the training time of the model should change.
 
 **All of the setup commands below are contained in the `deploy_and_run_training.sh` script - see
 the "Scripting the VM Setup and Training" section below**
@@ -120,8 +120,10 @@ Throughout this tutorial values inside angle brackets (`<>`) represent user-spec
 names and options and should be replaced with an appropriate value when executing the command:
 
 ```shell
-$ az group create --name <rg_name> --location <location>
+$ az group create --name <rg_name> --location SouthCentralUS
 ```
+**Note: you can use another region, but make sure it is one where NCv2 VMs are available.** (Use
+https://azure.microsoft.com/en-us/global-infrastructure/services/ to check availability.)
 
 Then create a VM instance in this resource group:
 
