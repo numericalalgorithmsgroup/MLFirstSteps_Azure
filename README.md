@@ -122,7 +122,7 @@ names and options and should be replaced with an appropriate value when executin
 ```shell
 $ az group create --name <rg_name> --location SouthCentralUS
 ```
-**Note: you can use another region, but make sure it is one where NCv2 VMs are available.** (Use
+**Note: you can use another location, but make sure it is one where NCv2 VMs are available.** (Use
 https://azure.microsoft.com/en-us/global-infrastructure/services/ to check availability.)
 
 Then create a VM instance in this resource group:
