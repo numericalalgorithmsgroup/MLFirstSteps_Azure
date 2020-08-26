@@ -23,7 +23,11 @@ existing ML workflow to Azure.
 
 ## Requirements
 
-To follow this tutorial you will need either:
+To follow this tutorial you will need:
+
+* A copy of the tutorial files from the git repository hosted at https://github.com/numericalalgorithmsgroup/MLFirstSteps_Azure
+
+And either:
 
 * A system with git, ssh, and the [Azure CLI] installed and logged in to a valid account. If you
   are using Windows, the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
@@ -303,7 +307,7 @@ The script will output the predictions sorted by descending rating in the file `
 By default, the script will generate a predicted rating for all movies in the dataset for the
 highest user ID number.
 
-## Dowloading the results to your local machine
+## Downloading the results to your local machine
 
 The results can now be copied back via ssh secure copy. To do this, use scp from your _local
 machine_:
@@ -347,12 +351,6 @@ a such a workflow are:
 4. Running the training
 5. Downloading the results
 6. Cleaning up resources after use
-
-Now you have got started training a simple ML model, the next step is to use distributed training
-with multiple GPUs and multiple VMs to train large models.  To learn how to do this on MS Azure,
-check out our second ML tutorial "[Distributed Mask R-CNN Training on MS Azure]"
-
-[Distributed Mask R-CNN Training on MS Azure]: https://github.com/numericalalgorithmsgroup/MaskR-CNN_Azure
 
 ## What Haven't We Told You (Yet)?
 
