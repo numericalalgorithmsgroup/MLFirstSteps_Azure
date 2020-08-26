@@ -85,7 +85,9 @@ the "Request Increase" button.  For a detailed guide see the
 ## Quickstart: Scripted VM Setup and Training
 
 The entirety of the training process can be scripted using the Azure CLI and standard Linux tools.
-An example script for doing this is provided as `deploy_and_run_training.sh`
+An example script for doing this is provided as [`deploy_and_run_training.sh`].
+
+[`deploy_and_run_training.sh`]: https://github.com/numericalalgorithmsgroup/MLFirstSteps_Azure/blob/master/deploy_and_run_training.sh
 
 This script executes all the commands shown below to create the VM instance and run the training.
 The [custom-script] VM extension is used to manage the installation of the docker and building of
@@ -94,7 +96,7 @@ the image.
 [custom-script]: https://docs.microsoft.com/en-us/azure/virtual-machines/extensions/custom-script-linux
 
 To run the example, first ensure that you are logged into the Azure CLI, then you will need to edit
-the `deploy_and_run_training.sh` script to provide your personal ssh key - this is needed to allow
+the [`deploy_and_run_training.sh`] script to provide your personal ssh key - this is needed to allow
 the script to log into the training VM. You can then run the script which will set up the VM
 instance, run the training, download results and delete VM instance. When the script completes you
 should have the final trained weights final predictions for one of the users, and a training log
@@ -114,7 +116,7 @@ container with PyTorch that we can use to train the model.  The instance type we
 "Standard_NC6s_v2", which contains a single NVidia P100, however you can use any instance type you
 like so long as it has an NVidia P100 or V100 - only the training time of the model should change.
 
-**All of the setup commands below are contained in the `deploy_and_run_training.sh` script - see
+**All of the setup commands below are contained in the [`deploy_and_run_training.sh`] script - see
 the "Scripting the VM Setup and Training" section below**
 
 First we will create a new resource group to hold the VM and its related materials.  This allows
@@ -177,9 +179,10 @@ $ cd MLFirstSteps_Azure
 ```
 
 The `MLFirstSteps_Azure` directory contains all the materials needed to complete this tutorial.  The ncf
-model and training scripts are located in the `ncf` subdirectory of this repository.  This
+model and training scripts are located in the [`ncf`] subdirectory of this repository.  This
 directory will be mounted in the docker container in the next step.
 
+[`ncf`]: https://github.com/numericalalgorithmsgroup/MLFirstSteps_Azure/tree/master/ncf
 
 ## Installing the Docker and Building the Image
 
@@ -265,7 +268,9 @@ $ docker run --runtime=nvidia \
 ```
 
 The final step before running the training is to download and prepare the dataset.  This is done
-using the `prepare_dataset.sh` script:
+using the [`prepare_dataset.sh`] script:
+
+[`prepare_dataset.sh`]: https://github.com/numericalalgorithmsgroup/MLFirstSteps_Azure/blob/master/ncf/prepare_dataset.sh
 
 ```shell
 $ cd /work/ncf
@@ -292,11 +297,13 @@ Having trained the model we can now use it to recommend additional movies.  For 
 pairing the model gives a predicted user rating between 0-1. The highest predicted movies not rated
 by the user can then be used as recommendations for that user.
 
-The provided `ncf/userinference.py` script gives an example of how to generate predictions from the
+The provided [`ncf/userinference.py`] script gives an example of how to generate predictions from the
 trained model. It can be run either on the remote machine or on a local machine with PyTorch
 installed and does not require a GPU to run. It takes two command-line arguments, the first the
 path to the trained model file, and the second the path to the original `movies.csv` file from the
 dataset - this is used to map movie IDs back to their names.
+
+[`ncf/userinference.py`]: https://github.com/numericalalgorithmsgroup/MLFirstSteps_Azure/blob/master/ncf/userinference.py
 
 ```shell
 $ python userinference.py /work/model.pth /data/ml-25m/movies.csv --output-dir /work
@@ -372,7 +379,18 @@ evicted at any time.
 [spot pricing tier]: https://azure.microsoft.com/en-gb/pricing/spot/
 
 To make use of the spot pricing tier you can pass the `--priority Spot` option to the Azure cli
-when creating your VM.
+when creating your VM:
+
+```shell
+$ az vm create \
+  --resource-group <rg_name> \
+  --name <vm_name> \
+  --priority Spot \
+  --size Standard_NC6s_v2 \
+  --image OpenLogic:CentOS-HPC:7_7-gen2:7.7.2020042001 \
+  --ssh-key-value <sshkey> \
+  --admin-username <admin_user>
+```
 
 ### Different instance types
 
